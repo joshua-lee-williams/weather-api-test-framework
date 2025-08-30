@@ -18,8 +18,8 @@ public class WeatherRetrievalTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void testGetWeatherForValidCity() {
         // Test data
-        String city = "London";
-        String countryCode = "UK";
+        String city = "Foley";
+        String countryCode = "US";
 
         // Execute API call
         Response response = weatherApiClient.getCurrentWeather(city, countryCode);
