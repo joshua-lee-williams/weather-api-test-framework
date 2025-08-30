@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Weather API Test Suite">
+    <test name="Functional Tests">
+        <classes>
+            <class name="com.weatherapi.tests.functional.WeatherRetrievalTests"/>
+        </classes>
+    </test>
+</suite>

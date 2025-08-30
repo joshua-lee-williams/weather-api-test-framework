@@ -2,15 +2,20 @@ package com.weatherapi.tests.functional;
 
 import com.weatherapi.core.BaseTest;
 import com.weatherapi.models.WeatherResponse;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.*;
 
+@Epic("Weather API Testing")
+@Feature("Weather Data Retrieval")
 public class WeatherRetrievalTests extends BaseTest {
 
     @Test(description = "Verify successful weather data retrieval for a valid city")
+    @Story("Valid city weather retrieval")
+    @Severity(SeverityLevel.CRITICAL)
     public void testGetWeatherForValidCity() {
         // Test data
         String city = "London";
@@ -18,6 +23,7 @@ public class WeatherRetrievalTests extends BaseTest {
 
         // Execute API call
         Response response = weatherApiClient.getCurrentWeather(city, countryCode);
+        Allure.addAttachment("API Response", response.getBody().asString());
 
         // Validate HTTP status and headers
         validateSuccessfulResponse(response);
@@ -48,12 +54,15 @@ public class WeatherRetrievalTests extends BaseTest {
     }
 
     @Test(description = "Verify API handles invalid city gracefully")
+    @Story("Error handling for invalid city")
+    @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherForInvalidCity() {
         // Test data - using a clearly non-existent city
         String invalidCity = "NonExistentCity123";
 
         // Execute API call
         Response response = weatherApiClient.getCurrentWeather(invalidCity, null);
+        Allure.addAttachment("Error Response", response.getBody().asString());
 
         // Validate error response
         response.then()
@@ -65,6 +74,8 @@ public class WeatherRetrievalTests extends BaseTest {
     }
 
     @Test(description = "Verify response time is acceptable")
+    @Story("Performance validation")
+    @Severity(SeverityLevel.NORMAL)
     public void testWeatherApiResponseTime() {
         String city = "Paris";
 
@@ -72,6 +83,9 @@ public class WeatherRetrievalTests extends BaseTest {
         long startTime = System.currentTimeMillis();
         Response response = weatherApiClient.getCurrentWeather(city, "FR");
         long responseTime = System.currentTimeMillis() - startTime;
+
+        Allure.addAttachment("Response Time", responseTime + "ms");
+        Allure.addAttachment("API Response", response.getBody().asString());
 
         // Validate response
         validateSuccessfulResponse(response);
@@ -85,12 +99,15 @@ public class WeatherRetrievalTests extends BaseTest {
     }
 
     @Test(description = "Verify weather data by coordinates")
+    @Story("Coordinate-based weather retrieval")
+    @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherByCoordinates() {
         // London coordinates
         double lat = 51.5074;
         double lon = -0.1278;
 
         Response response = weatherApiClient.getCurrentWeatherByCoordinates(lat, lon);
+        Allure.addAttachment("Coordinate Response", response.getBody().asString());
 
         // Validate response
         validateSuccessfulResponse(response);
