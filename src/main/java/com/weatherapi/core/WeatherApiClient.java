@@ -1,3 +1,4 @@
+
 package com.weatherapi.core;
 
 import com.weatherapi.models.WeatherResponse;
@@ -40,8 +41,7 @@ public class WeatherApiClient {
         RequestSpecification request = RestAssured.given()
                 .queryParam("q", location)
                 .queryParam("appid", apiKey)
-                .queryParam("units", "metric") // Celsius
-                .timeout(timeout);
+                .queryParam("units", "metric"); // Celsius
 
         Response response = request
                 .when()
@@ -67,8 +67,7 @@ public class WeatherApiClient {
                 .queryParam("lat", lat)
                 .queryParam("lon", lon)
                 .queryParam("appid", apiKey)
-                .queryParam("units", "metric")
-                .timeout(timeout);
+                .queryParam("units", "metric");
 
         return request
                 .when()
