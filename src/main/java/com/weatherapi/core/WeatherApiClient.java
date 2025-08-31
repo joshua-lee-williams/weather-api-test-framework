@@ -48,7 +48,7 @@ public class WeatherApiClient {
         RequestSpecification request = RestAssured.given()
                 .queryParam("q", location)
                 .queryParam("appid", apiKey)
-                .queryParam("units", "metric"); // Celsius
+                .queryParam("units", "imperial"); // Fahrenheit
 
         Response response = request
                 .when()
@@ -108,8 +108,8 @@ public class WeatherApiClient {
      */
     public boolean validateApiKey() {
         try {
-            logger.info("Attempted API Key: {}", apiKey);
-            Response response = getCurrentWeather("London", "UK");
+            logger.info("Attempted API Key: {}", apiKey.substring(0,8) + "...");
+            Response response = getCurrentWeather(TestConfig.getDefaultCity(), TestConfig.getDefaultCountry());
             return response.getStatusCode() != 401;
         } catch (Exception e) {
 

@@ -57,11 +57,15 @@ public class TestConfig {
     }
 
     public static String getDefaultCity() {
-        return properties.getProperty("default.city", "London");
+        return properties.getProperty("default.city", "Foley");
     }
 
     public static String getDefaultCountry() {
-        return properties.getProperty("default.country", "UK");
+        return properties.getProperty("default.country", "US");
+    }
+
+    public static String getInvalidCity() {
+        return properties.getProperty("default.invalid.city", "NonExistentCity123");
     }
 
     public static Properties getAllProperties() {
@@ -78,4 +82,6 @@ public class TestConfig {
         }
         return properties.getProperty(key, defaultValue);
     }
+
+
 }

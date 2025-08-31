@@ -1,5 +1,6 @@
 package com.weatherapi.tests.functional;
 
+import com.weatherapi.config.TestConfig;
 import com.weatherapi.core.BaseTest;
 import com.weatherapi.models.WeatherResponse;
 import io.qameta.allure.*;
@@ -13,14 +14,15 @@ import static org.hamcrest.Matchers.*;
 @Feature("Weather Data Retrieval")
 public class WeatherRetrievalTests extends BaseTest {
 
+    // Test data
+    private static final String city = TestConfig.getDefaultCity();
+    private static final String countryCode = TestConfig.getDefaultCountry();
+    private static final String invalidCity = TestConfig.getInvalidCity();
+
     @Test(description = "Verify successful weather data retrieval for a valid city")
     @Story("Valid city weather retrieval")
     @Severity(SeverityLevel.CRITICAL)
     public void testGetWeatherForValidCity() {
-        // Test data
-        String city = "Foley";
-        String countryCode = "US";
-
         // Execute API call
         Response response = weatherApiClient.getCurrentWeather(city, countryCode);
         Allure.addAttachment("API Response", response.getBody().asString());
@@ -57,9 +59,6 @@ public class WeatherRetrievalTests extends BaseTest {
     @Story("Error handling for invalid city")
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherForInvalidCity() {
-        // Test data - using a clearly non-existent city
-        String invalidCity = "NonExistentCity123";
-
         // Execute API call
         Response response = weatherApiClient.getCurrentWeather(invalidCity, null);
         Allure.addAttachment("Error Response", response.getBody().asString());
