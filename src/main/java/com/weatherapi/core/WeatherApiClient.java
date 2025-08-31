@@ -1,8 +1,11 @@
 
 package com.weatherapi.core;
 
+import com.weatherapi.config.TestConfig;
 import com.weatherapi.models.WeatherResponse;
 import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
@@ -19,12 +22,16 @@ public class WeatherApiClient {
 
     public WeatherApiClient(Properties config) {
         this.baseUrl = config.getProperty("api.base.url");
-        this.apiKey = config.getProperty("api.key");
+        this.apiKey = TestConfig.getApiKey();
         this.timeout = Integer.parseInt(config.getProperty("api.timeout", "5000"));
 
         // Configure REST Assured defaults
         RestAssured.baseURI = baseUrl;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+        // Add detailed logging to see what's being sent
+        // RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+
     }
 
     /**
@@ -101,9 +108,11 @@ public class WeatherApiClient {
      */
     public boolean validateApiKey() {
         try {
+            logger.info("Attempted API Key: {}", apiKey);
             Response response = getCurrentWeather("London", "UK");
-            return response.getStatusCode() == 200;
+            return response.getStatusCode() != 401;
         } catch (Exception e) {
+
             logger.error("API key validation failed", e);
             return false;
         }

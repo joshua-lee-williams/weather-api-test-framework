@@ -41,11 +41,15 @@ public class TestConfig {
     }
 
     public static String getApiKey() {
-        String apiKey = System.getProperty("api.key");
+        String apiKey = System.getenv("OPENWEATHER_API_KEY");
         if (apiKey != null && !apiKey.isEmpty()) {
+            System.out.println("Using environment API key: " + apiKey.substring(0, 8) + "...");
             return apiKey;
         }
-        return properties.getProperty("api.key");
+
+        String propKey = properties.getProperty("api.key");
+        System.out.println("Using properties API key: " + (propKey != null ? propKey.substring(0, 8) + "..." : "null"));
+        return propKey;
     }
 
     public static int getApiTimeout() {
