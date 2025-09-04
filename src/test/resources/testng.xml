@@ -10,4 +10,9 @@
           <class name="com.weatherapi.tests.performance.WeatherPerformanceTests"/>
          </classes>
     </test>
+    <test name="Security Tests">
+        <classes>
+            <class name="com.weatherapi.tests.security.WeatherSecurityTests"/>
+        </classes>
+    </test>
 </suite>

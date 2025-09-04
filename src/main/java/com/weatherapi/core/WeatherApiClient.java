@@ -39,11 +39,15 @@ public class WeatherApiClient {
      * @param countryCode Optional country code (e.g., "UK")
      * @return REST Assured Response object
      */
+    // If no custom API Key is sent, use the default API Key from src/resources/config/test.properties
     public Response getCurrentWeather(String city, String countryCode) {
+        return getCurrentWeather(city, countryCode, apiKey);
+    }
+
+    // If a custom API Key is sent, use the custom API Key
+    public Response getCurrentWeather (String city, String countryCode, String apiKey) {
         String location = countryCode != null ? city + "," + countryCode : city;
-
         logger.info("Getting weather data for: {}", location);
-
         RequestSpecification request = RestAssured.given()
                 .queryParam("q", location)
                 .queryParam("appid", apiKey)
