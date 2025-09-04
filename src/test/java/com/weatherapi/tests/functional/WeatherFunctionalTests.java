@@ -11,13 +11,10 @@ import org.testng.annotations.Test;
 import static org.hamcrest.Matchers.*;
 
 @Epic("Weather API Testing")
-@Feature("Weather Data Retrieval")
-public class WeatherRetrievalTests extends BaseTest {
+@Feature("Weather Data Functional")
+public class WeatherFunctionalTests extends BaseTest {
 
     // Test data
-    private static final String city = TestConfig.getDefaultCity();
-    private static final String countryCode = TestConfig.getDefaultCountry();
-    private static final String invalidCity = TestConfig.getInvalidCity();
 
     @Test(description = "Verify successful weather data retrieval for a valid city")
     @Story("Valid city weather retrieval")
@@ -72,30 +69,7 @@ public class WeatherRetrievalTests extends BaseTest {
         logTestCompletion("testGetWeatherForInvalidCity", true);
     }
 
-    @Test(description = "Verify response time is acceptable")
-    @Story("Performance validation")
-    @Severity(SeverityLevel.NORMAL)
-    public void testWeatherApiResponseTime() {
-        String city = "Paris";
 
-        // Measure response time
-        long startTime = System.currentTimeMillis();
-        Response response = weatherApiClient.getCurrentWeather(city, "FR");
-        long responseTime = System.currentTimeMillis() - startTime;
-
-        Allure.addAttachment("Response Time", responseTime + "ms");
-        Allure.addAttachment("API Response", response.getBody().asString());
-
-        // Validate response
-        validateSuccessfulResponse(response);
-
-        // Performance assertion - should respond within 3 seconds
-        Assert.assertTrue(responseTime < 3000,
-                String.format("API response time (%dms) should be less than 3000ms", responseTime));
-
-        logger.info("Response time for {}: {}ms", city, responseTime);
-        logTestCompletion("testWeatherApiResponseTime", true);
-    }
 
     @Test(description = "Verify weather data by coordinates")
     @Story("Coordinate-based weather retrieval")

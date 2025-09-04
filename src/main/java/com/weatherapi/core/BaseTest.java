@@ -11,6 +11,9 @@ import java.lang.reflect.Method;
 public class BaseTest {
     protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected WeatherApiClient weatherApiClient;
+    protected static final String city = TestConfig.getDefaultCity();
+    protected static final String countryCode = TestConfig.getDefaultCountry();
+    protected static final String invalidCity = TestConfig.getInvalidCity();
 
     @BeforeClass
     public void setupClass() {

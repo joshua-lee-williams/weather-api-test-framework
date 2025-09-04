@@ -1,0 +1,36 @@
+package com.weatherapi.tests.performance;
+
+import com.weatherapi.core.BaseTest;
+import io.qameta.allure.*;
+import io.restassured.response.Response;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+@Epic("Weather API Testing")
+@Feature("Weather Data Performance")
+public class WeatherPerformanceTests extends BaseTest {
+
+    @Test(description = "Verify response time is acceptable")
+    @Story("Performance validation")
+    @Severity(SeverityLevel.NORMAL)
+    public void testWeatherApiResponseTime() {
+        // Measure response time
+        long startTime = System.currentTimeMillis();
+        Response response = weatherApiClient.getCurrentWeather(city, countryCode);
+        long responseTime = System.currentTimeMillis() - startTime;
+
+        Allure.addAttachment("Response Time", responseTime + "ms");
+        Allure.addAttachment("API Response", response.getBody().asString());
+
+        // Validate response
+        validateSuccessfulResponse(response);
+
+        // Performance assertion - should respond within 3 seconds
+        Assert.assertTrue(responseTime < 3000,
+                String.format("API response time (%dms) should be less than 3000ms", responseTime));
+
+        logger.info("Response time for {}, {}: {}ms", city, countryCode, responseTime);
+        logTestCompletion("testWeatherApiResponseTime", true);
+    }
+
+}
