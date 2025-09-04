@@ -113,7 +113,7 @@ public class WeatherApiClient {
         try {
             logger.info("Attempted API Key: {}", apiKey.substring(0,8) + "...");
             Response response = getCurrentWeather(TestConfig.getDefaultCity(), TestConfig.getDefaultCountry());
-            return response.getStatusCode() != 401;
+            return (response.getStatusCode() != 401);
         } catch (Exception e) {
 
             logger.error("API key validation failed", e);
