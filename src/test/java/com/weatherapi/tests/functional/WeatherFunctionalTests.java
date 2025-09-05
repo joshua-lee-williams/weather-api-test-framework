@@ -48,24 +48,22 @@ public class WeatherFunctionalTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherByCoordinates() {
         // London coordinates
-        double lat = 51.5074;
-        double lon = -0.1278;
+        double latitude = 51.5074, longitude = -0.1278;
 
-        Response response = weatherApiClient.getCurrentWeatherByCoordinates(lat, lon);
+        Response response = weatherApiClient.getCurrentWeatherByCoordinates(latitude, longitude);
         Allure.addAttachment("Coordinate Response", response.getBody().asString());
         validateCoordinateSpecificWeatherResponse(response);
 
-        float actualLat = response.jsonPath().getFloat("coord.lat");
-        float actualLon = response.jsonPath().getFloat("coord.lon");
-        Assert.assertTrue(Math.abs(actualLat - lat) < 1.0,
-                String.format("Latitude should be close to expected. Expected: %.4f, Actual: %.4f", lat, actualLat));
-        Assert.assertTrue(Math.abs(actualLon - lon) < 1.0,
-                String.format("Longitude should be close to expected. Expected: %.4f, Actual: %.4f", lon, actualLon));
+        float actualLat = response.jsonPath().getFloat("coord.latitude");
+        float actualLon = response.jsonPath().getFloat("coord.longitude");
+        Assert.assertTrue(Math.abs(actualLat - latitude) < 1.0,
+                String.format("Latitude should be close to expected. Expected: %.4f, Actual: %.4f", latitude, actualLat));
+        Assert.assertTrue(Math.abs(actualLon - longitude) < 1.0,
+                String.format("Longitude should be close to expected. Expected: %.4f, Actual: %.4f", longitude, actualLon));
         String cityName = response.jsonPath().getString("name");
         logger.info("Weather data retrieved by coordinates ({}, {}): City identified as {}",
-                lat, lon, cityName);
+                latitude, longitude, cityName);
         logTestCompletion("testGetWeatherByCoordinates", true);
     }
-
 
 }
