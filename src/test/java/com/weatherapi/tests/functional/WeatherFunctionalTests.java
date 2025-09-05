@@ -127,7 +127,7 @@ public class WeatherFunctionalTests extends BaseTest {
                 .body("weather[0].main", notNullValue())
                 .body("weather[0].description", notNullValue());
 
-        logger.info("City with special chaacters response passed for: {}", cityWithSpecialCharacters);
+        logger.info("City with special characters response passed for: {}", cityWithSpecialCharacters);
         logTestCompletion("testGetWeatherWithSpecialCharactersInCityName", true);
     }
 }
