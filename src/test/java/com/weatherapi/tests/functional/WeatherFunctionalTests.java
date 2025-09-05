@@ -1,13 +1,10 @@
 package com.weatherapi.tests.functional;
 
 import com.weatherapi.core.BaseTest;
-import com.weatherapi.models.WeatherResponse;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.hamcrest.Matchers.*;
 
 @Epic("Weather API Testing")
 @Feature("Weather Data Functional")
@@ -56,43 +53,19 @@ public class WeatherFunctionalTests extends BaseTest {
 
         Response response = weatherApiClient.getCurrentWeatherByCoordinates(lat, lon);
         Allure.addAttachment("Coordinate Response", response.getBody().asString());
+        validateCoordinateSpecificWeatherResponse(response);
 
-        // Validate response
-        validateSuccessfulResponse(response);
-
-        // Validate coordinate-specific response
-        response.then()
-                .body("coord", notNullValue())
-                .body("name", notNullValue())
-                .body("main.temp", notNullValue());
-
-        // Extract and validate coordinates with proper type handling
         float actualLat = response.jsonPath().getFloat("coord.lat");
         float actualLon = response.jsonPath().getFloat("coord.lon");
-
         Assert.assertTrue(Math.abs(actualLat - lat) < 1.0,
                 String.format("Latitude should be close to expected. Expected: %.4f, Actual: %.4f", lat, actualLat));
         Assert.assertTrue(Math.abs(actualLon - lon) < 1.0,
                 String.format("Longitude should be close to expected. Expected: %.4f, Actual: %.4f", lon, actualLon));
-
         String cityName = response.jsonPath().getString("name");
         logger.info("Weather data retrieved by coordinates ({}, {}): City identified as {}",
                 lat, lon, cityName);
-
         logTestCompletion("testGetWeatherByCoordinates", true);
     }
 
-    public void validateStandardWeatherResponse(Response response, String cityName) {
-        response.then()
-                .body("name", equalTo(cityName))
-                .body("cod", equalTo(200))
-                .body("main", notNullValue())
-                .body("main.temp", notNullValue())
-                .body("main.humidity", notNullValue())
-                .body("weather", not(empty()))
-                .body("weather[0].main", notNullValue())
-                .body("weather[0].description", notNullValue())
-                .statusCode(200)
-                .header("Content-Type", org.hamcrest.Matchers.containsString("application/json"));
-    }
+
 }

@@ -4,7 +4,6 @@ package com.weatherapi.core;
 import com.weatherapi.config.TestConfig;
 import com.weatherapi.models.WeatherResponse;
 import io.restassured.RestAssured;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.slf4j.Logger;
@@ -27,10 +26,6 @@ public class WeatherApiClient {
         // Configure REST Assured defaults
         RestAssured.baseURI = baseUrl;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
-        // Add detailed logging to see what's being sent
-        RestAssured.filters(new ResponseLoggingFilter());
-
     }
 
     /**

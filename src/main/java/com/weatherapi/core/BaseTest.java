@@ -9,7 +9,10 @@ import org.testng.annotations.BeforeMethod;
 
 import java.lang.reflect.Method;
 
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
 public class BaseTest {
     protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
@@ -18,6 +21,7 @@ public class BaseTest {
     protected static final String DEFAULT_COUNTRY_CODE = TestConfig.getDefaultCountry();
     protected static final String INVALID_CITY = TestConfig.getInvalidCity();
     protected static final String CITY_WITH_SPECIAL_CHARACTERS = "São Paulo";
+    protected static final int SUCCESSFUL_STATUS = 200;
     protected static final int CITY_NOT_FOUND_STATUS = 404;
     protected static final String CITY_NOT_FOUND_MESSAGE_CONTAINS = "not found";
 
@@ -41,20 +45,40 @@ public class BaseTest {
         logger.info("Starting test method: {}", method.getName());
     }
 
+    protected void logTestCompletion(String testName, boolean passed) {
+        logger.info("Test '{}' completed. Status: {}", testName, passed ? "PASSED" : "FAILED");
+    }
 
     protected void validateSuccessfulResponse(io.restassured.response.Response response) {
         response.then()
-                .statusCode(200)
+                .statusCode(SUCCESSFUL_STATUS)
                 .header("Content-Type", containsString("application/json"));
-    }
-
-    protected void logTestCompletion(String testName, boolean passed) {
-        logger.info("Test '{}' completed. Status: {}", testName, passed ? "PASSED" : "FAILED");
     }
 
     protected void validateErrorResponse(Response response, int expectedStatus, String expectedMessageContains) {
         response.then()
                 .statusCode(expectedStatus)
                 .body("message", containsString(expectedMessageContains));
+    }
+
+    public void validateStandardWeatherResponse(Response response, String cityName) {
+        validateSuccessfulResponse(response);
+        response.then()
+                .body("name", equalTo(cityName))
+                .body("cod", equalTo(200))
+                .body("main", notNullValue())
+                .body("main.temp", notNullValue())
+                .body("main.humidity", notNullValue())
+                .body("weather", not(empty()))
+                .body("weather[0].main", notNullValue())
+                .body("weather[0].description", notNullValue());
+    }
+
+    protected void validateCoordinateSpecificWeatherResponse(Response response) {
+        validateSuccessfulResponse(response);
+        response.then()
+                .body("coord", notNullValue())
+                .body("name", notNullValue())
+                .body("main.temp", notNullValue());
     }
 }
