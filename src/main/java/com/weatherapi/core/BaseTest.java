@@ -1,6 +1,6 @@
 package com.weatherapi.core;
 
-import com.weatherapi.config.TestConfig;
+import com.weatherapi.config.Config;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,9 @@ import static org.hamcrest.Matchers.not;
 public class BaseTest {
     protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected WeatherApiClient weatherApiClient;
-    protected static final String DEFAULT_CITY = TestConfig.getDefaultCity();
-    protected static final String DEFAULT_COUNTRY_CODE = TestConfig.getDefaultCountry();
-    protected static final String INVALID_CITY = TestConfig.getInvalidCity();
+    protected static final String DEFAULT_CITY = Config.getDefaultCity();
+    protected static final String DEFAULT_COUNTRY_CODE = Config.getDefaultCountry();
+    protected static final String INVALID_CITY = Config.getInvalidCity();
     protected static final String CITY_WITH_SPECIAL_CHARACTERS = "São Paulo";
     protected static final int SUCCESSFUL_STATUS = 200;
     protected static final int CITY_NOT_FOUND_STATUS = 404;
@@ -33,7 +33,7 @@ public class BaseTest {
         logger.info("Setting up test class: {}", this.getClass().getSimpleName());
 
         // Initialize API client with configuration
-        weatherApiClient = new WeatherApiClient(TestConfig.getAllProperties());
+        weatherApiClient = new WeatherApiClient(Config.getAllProperties());
 
         // Validate API key is working
         if (!weatherApiClient.validateApiKey()) {

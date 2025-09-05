@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class TestConfig {
-    private static final Logger logger = LoggerFactory.getLogger(TestConfig.class);
+public class Config {
+    private static final Logger logger = LoggerFactory.getLogger(Config.class);
     private static Properties properties;
     private static final String DEFAULT_CONFIG_FILE = "config/test.properties";
 
@@ -20,7 +20,7 @@ public class TestConfig {
         properties = new Properties();
         String configFile = System.getProperty("config.file", DEFAULT_CONFIG_FILE);
 
-        try (InputStream inputStream = TestConfig.class.getClassLoader()
+        try (InputStream inputStream = Config.class.getClassLoader()
                 .getResourceAsStream(configFile)) {
 
             if (inputStream != null) {

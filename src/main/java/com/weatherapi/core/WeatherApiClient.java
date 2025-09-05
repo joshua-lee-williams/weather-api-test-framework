@@ -1,7 +1,7 @@
 
 package com.weatherapi.core;
 
-import com.weatherapi.config.TestConfig;
+import com.weatherapi.config.Config;
 import com.weatherapi.models.WeatherResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -20,7 +20,7 @@ public class WeatherApiClient {
 
     public WeatherApiClient(Properties config) {
         this.baseUrl = config.getProperty("api.base.url");
-        this.apiKey = TestConfig.getApiKey();
+        this.apiKey = Config.getApiKey();
         this.timeout = Integer.parseInt(config.getProperty("api.timeout", "5000"));
 
         // Configure REST Assured defaults
@@ -107,7 +107,7 @@ public class WeatherApiClient {
     public boolean validateApiKey() {
         try {
             logger.info("Attempted API Key: {}", apiKey.substring(0,8) + "...");
-            Response response = getCurrentWeather(TestConfig.getDefaultCity(), TestConfig.getDefaultCountry());
+            Response response = getCurrentWeather(Config.getDefaultCity(), Config.getDefaultCountry());
             return (response.getStatusCode() != 401);
         } catch (Exception e) {
 
