@@ -16,7 +16,7 @@ public class WeatherPerformanceTests extends BaseTest {
     public void testWeatherApiResponseTime() {
         // Measure response time
         long startTime = System.currentTimeMillis();
-        Response response = weatherApiClient.getCurrentWeather(city, countryCode);
+        Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE);
         long responseTime = System.currentTimeMillis() - startTime;
 
         Allure.addAttachment("Response Time", responseTime + "ms");
@@ -29,7 +29,7 @@ public class WeatherPerformanceTests extends BaseTest {
         Assert.assertTrue(responseTime < 3000,
                 String.format("API response time (%dms) should be less than 3000ms", responseTime));
 
-        logger.info("Response time for {}, {}: {}ms", city, countryCode, responseTime);
+        logger.info("Response time for {}, {}: {}ms", DEFAULT_CITY, DEFAULT_COUNTRY_CODE, responseTime);
         logTestCompletion("testWeatherApiResponseTime", true);
     }
 

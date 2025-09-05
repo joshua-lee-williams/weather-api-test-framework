@@ -11,10 +11,10 @@ import java.lang.reflect.Method;
 public class BaseTest {
     protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
     protected WeatherApiClient weatherApiClient;
-    protected static final String city = TestConfig.getDefaultCity();
-    protected static final String countryCode = TestConfig.getDefaultCountry();
-    protected static final String invalidCity = TestConfig.getInvalidCity();
-    protected static final String cityWithSpecialCharacters = "São Paulo";
+    protected static final String DEFAULT_CITY = TestConfig.getDefaultCity();
+    protected static final String DEFAULT_COUNTRY_CODE = TestConfig.getDefaultCountry();
+    protected static final String INVALID_CITY = TestConfig.getInvalidCity();
+    protected static final String CITY_WITH_SPECIAL_CHARACTERS = "São Paulo";
 
     @BeforeClass
     public void setupClass() {

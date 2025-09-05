@@ -1,6 +1,5 @@
 package com.weatherapi.tests.functional;
 
-import com.weatherapi.config.TestConfig;
 import com.weatherapi.core.BaseTest;
 import com.weatherapi.models.WeatherResponse;
 import io.qameta.allure.*;
@@ -21,35 +20,42 @@ public class WeatherFunctionalTests extends BaseTest {
     @Severity(SeverityLevel.CRITICAL)
     public void testGetWeatherForValidCity() {
         // Execute API call
-        Response response = weatherApiClient.getCurrentWeather(city, countryCode);
+        Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE);
         Allure.addAttachment("API Response", response.getBody().asString());
 
         // Validate HTTP status and headers
         validateSuccessfulResponse(response);
 
         // Validate JSON response structure and data
-        response.then()
-                .body("name", equalTo(city))
-                .body("cod", equalTo(200))
-                .body("main", notNullValue())
-                .body("main.temp", notNullValue())
-                .body("main.humidity", notNullValue())
-                .body("weather", not(empty()))
-                .body("weather[0].main", notNullValue())
-                .body("weather[0].description", notNullValue());
+        validateStandardWeatherResponse(response, DEFAULT_CITY);
 
         // Additional validation using POJO
         WeatherResponse weatherData = response.as(WeatherResponse.class);
-        Assert.assertEquals(weatherData.getName(), city, "City name should match request");
+        Assert.assertEquals(weatherData.getName(), DEFAULT_CITY, "City name should match request");
         Assert.assertEquals(weatherData.getCod(), 200, "Response code should be 200");
         Assert.assertNotNull(weatherData.getMain(), "Main weather data should not be null");
         Assert.assertTrue(weatherData.getMain().getHumidity() > 0, "Humidity should be greater than 0");
 
         // Log results for debugging
         logger.info("Weather data retrieved for {}: Temperature={}°C, Humidity={}%",
-                city, weatherData.getMain().getTemp(), weatherData.getMain().getHumidity());
+                DEFAULT_CITY, weatherData.getMain().getTemp(), weatherData.getMain().getHumidity());
 
         logTestCompletion("testGetWeatherForValidCity", true);
+    }
+
+    @Test(description = "Verify API handles special characters in city name")
+    @Story("Special Characters")
+    @Severity(SeverityLevel.NORMAL)
+    public void testGetWeatherWithSpecialCharactersInCityName() {
+        // Execute API call
+        Response response = weatherApiClient.getCurrentWeather(CITY_WITH_SPECIAL_CHARACTERS, null);
+        Allure.addAttachment("City with special characters response: ", response.getBody().asString());
+
+        // Validate standard response
+        validateStandardWeatherResponse(response, CITY_WITH_SPECIAL_CHARACTERS);
+
+        logger.info("City with special characters response passed for: {}", CITY_WITH_SPECIAL_CHARACTERS);
+        logTestCompletion("testGetWeatherWithSpecialCharactersInCityName", true);
     }
 
     @Test(description = "Verify API handles invalid city gracefully")
@@ -57,7 +63,7 @@ public class WeatherFunctionalTests extends BaseTest {
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherForInvalidCity() {
         // Execute API call
-        Response response = weatherApiClient.getCurrentWeather(invalidCity, null);
+        Response response = weatherApiClient.getCurrentWeather(INVALID_CITY, null);
         Allure.addAttachment("Error Response", response.getBody().asString());
 
         // Validate error response
@@ -65,7 +71,7 @@ public class WeatherFunctionalTests extends BaseTest {
                 .statusCode(404)
                 .body("message", containsString("not found"));
 
-        logger.info("Invalid city test completed - API correctly returned 404 for: {}", invalidCity);
+        logger.info("Invalid city test completed - API correctly returned 404 for: {}", INVALID_CITY);
         logTestCompletion("testGetWeatherForInvalidCity", true);
     }
 
@@ -107,18 +113,9 @@ public class WeatherFunctionalTests extends BaseTest {
         logTestCompletion("testGetWeatherByCoordinates", true);
     }
 
-
-    @Test(description = "Verify API handles special characters in city name")
-    @Story("Special Characters")
-    @Severity(SeverityLevel.NORMAL)
-    public void testGetWeatherWithSpecialCharactersInCityName() {
-        // Execute API call
-        Response response = weatherApiClient.getCurrentWeather(cityWithSpecialCharacters, null);
-        Allure.addAttachment("City with special characters response: ", response.getBody().asString());
-
-        // Validate error response
+    public void validateStandardWeatherResponse(Response response, String cityName) {
         response.then()
-                .body("name", equalTo(cityWithSpecialCharacters))
+                .body("name", equalTo(cityName))
                 .body("cod", equalTo(200))
                 .body("main", notNullValue())
                 .body("main.temp", notNullValue())
@@ -126,8 +123,5 @@ public class WeatherFunctionalTests extends BaseTest {
                 .body("weather", not(empty()))
                 .body("weather[0].main", notNullValue())
                 .body("weather[0].description", notNullValue());
-
-        logger.info("City with special characters response passed for: {}", cityWithSpecialCharacters);
-        logTestCompletion("testGetWeatherWithSpecialCharactersInCityName", true);
     }
 }

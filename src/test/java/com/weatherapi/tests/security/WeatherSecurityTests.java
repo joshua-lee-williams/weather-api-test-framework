@@ -3,7 +3,6 @@ package com.weatherapi.tests.security;
 import com.weatherapi.core.BaseTest;
 import io.qameta.allure.*;
 import io.restassured.response.Response;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @Epic("Weather API Testing")
@@ -18,7 +17,7 @@ public class WeatherSecurityTests extends BaseTest {
     public void testGetWeatherWithEmptyApiKey() {
         // Measure response time
         long startTime = System.currentTimeMillis();
-        Response response = weatherApiClient.getCurrentWeather(city, countryCode, emptyAPIKey);
+        Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE, emptyAPIKey);
         response.then()
                 .statusCode(401);
 
