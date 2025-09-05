@@ -9,19 +9,13 @@ import org.testng.annotations.Test;
 @Feature("Weather Data Security")
 public class WeatherSecurityTests extends BaseTest {
 
-    private final static String emptyAPIKey = "";
-
     @Test(description = "Verify empty API Key is handled correctly")
     @Story("Performance validation")
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherWithEmptyApiKey() {
-        // Measure response time
-        long startTime = System.currentTimeMillis();
-        Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE, emptyAPIKey);
-        response.then()
-                .statusCode(401);
-
-        logger.info("Empty API Key test completed - API correctly returned 401 for apiKey: {}", emptyAPIKey);
+        Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE, EMPTY_API_KEY);
+        validateErrorResponse(response, INVALID_API_KEY_STATUS, INVALID_API_KEY_MESSAGE_CONTAINS);
+        logger.info("Empty API Key test completed - API correctly returned HTTP Status {} for apiKey: {}", INVALID_API_KEY_STATUS, EMPTY_API_KEY);
         logTestCompletion("testGetWeatherWithEmptyApiKey", true);
     }
 

@@ -24,6 +24,9 @@ public class BaseTest {
     protected static final int SUCCESSFUL_STATUS = 200;
     protected static final int CITY_NOT_FOUND_STATUS = 404;
     protected static final String CITY_NOT_FOUND_MESSAGE_CONTAINS = "not found";
+    protected static final int INVALID_API_KEY_STATUS = 401;
+    protected static final String INVALID_API_KEY_MESSAGE_CONTAINS = "Invalid API key";
+    protected final static String EMPTY_API_KEY = "";
 
     @BeforeClass
     public void setupClass() {
