@@ -1,12 +1,15 @@
 package com.weatherapi.core;
 
 import com.weatherapi.config.TestConfig;
+import io.restassured.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import java.lang.reflect.Method;
+
+import static org.hamcrest.Matchers.containsString;
 
 public class BaseTest {
     protected static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
@@ -15,6 +18,8 @@ public class BaseTest {
     protected static final String DEFAULT_COUNTRY_CODE = TestConfig.getDefaultCountry();
     protected static final String INVALID_CITY = TestConfig.getInvalidCity();
     protected static final String CITY_WITH_SPECIAL_CHARACTERS = "São Paulo";
+    protected static final int CITY_NOT_FOUND_STATUS = 404;
+    protected static final String CITY_NOT_FOUND_MESSAGE_CONTAINS = "not found";
 
     @BeforeClass
     public void setupClass() {
@@ -36,19 +41,20 @@ public class BaseTest {
         logger.info("Starting test method: {}", method.getName());
     }
 
-    /**
-     * Common assertion helper for API response validation
-     */
+
     protected void validateSuccessfulResponse(io.restassured.response.Response response) {
         response.then()
                 .statusCode(200)
-                .header("Content-Type", org.hamcrest.Matchers.containsString("application/json"));
+                .header("Content-Type", containsString("application/json"));
     }
 
-    /**
-     * Helper method to log test completion
-     */
     protected void logTestCompletion(String testName, boolean passed) {
         logger.info("Test '{}' completed. Status: {}", testName, passed ? "PASSED" : "FAILED");
+    }
+
+    protected void validateErrorResponse(Response response, int expectedStatus, String expectedMessageContains) {
+        response.then()
+                .statusCode(expectedStatus)
+                .body("message", containsString(expectedMessageContains));
     }
 }

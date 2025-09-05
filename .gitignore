@@ -28,3 +28,4 @@ Thumbs.db
 # Local config files (not committed to Git)
 src/test/resources/config/test.properties
 target/test-classes/config/test.properties
+/target

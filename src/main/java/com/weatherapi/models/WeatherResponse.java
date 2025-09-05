@@ -36,9 +36,14 @@ public class WeatherResponse {
     public static class Main {
         private double temp;
         private int humidity;
+        private double feels_like;
 
         public double getTemp() {
             return temp;
+        }
+
+        public double getFeels_like() {
+            return feels_like;
         }
 
         public void setTemp(double temp) {

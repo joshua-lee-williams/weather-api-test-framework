@@ -13,33 +13,14 @@ import static org.hamcrest.Matchers.*;
 @Feature("Weather Data Functional")
 public class WeatherFunctionalTests extends BaseTest {
 
-    // Test data
-
     @Test(description = "Verify successful weather data retrieval for a valid city")
     @Story("Valid city weather retrieval")
     @Severity(SeverityLevel.CRITICAL)
     public void testGetWeatherForValidCity() {
-        // Execute API call
         Response response = weatherApiClient.getCurrentWeather(DEFAULT_CITY, DEFAULT_COUNTRY_CODE);
         Allure.addAttachment("API Response", response.getBody().asString());
-
-        // Validate HTTP status and headers
-        validateSuccessfulResponse(response);
-
-        // Validate JSON response structure and data
         validateStandardWeatherResponse(response, DEFAULT_CITY);
-
-        // Additional validation using POJO
-        WeatherResponse weatherData = response.as(WeatherResponse.class);
-        Assert.assertEquals(weatherData.getName(), DEFAULT_CITY, "City name should match request");
-        Assert.assertEquals(weatherData.getCod(), 200, "Response code should be 200");
-        Assert.assertNotNull(weatherData.getMain(), "Main weather data should not be null");
-        Assert.assertTrue(weatherData.getMain().getHumidity() > 0, "Humidity should be greater than 0");
-
-        // Log results for debugging
-        logger.info("Weather data retrieved for {}: Temperature={}°C, Humidity={}%",
-                DEFAULT_CITY, weatherData.getMain().getTemp(), weatherData.getMain().getHumidity());
-
+        logger.info("Weather data successfully retrieved for: {}, {}", DEFAULT_CITY, DEFAULT_COUNTRY_CODE);
         logTestCompletion("testGetWeatherForValidCity", true);
     }
 
@@ -47,14 +28,10 @@ public class WeatherFunctionalTests extends BaseTest {
     @Story("Special Characters")
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherWithSpecialCharactersInCityName() {
-        // Execute API call
         Response response = weatherApiClient.getCurrentWeather(CITY_WITH_SPECIAL_CHARACTERS, null);
         Allure.addAttachment("City with special characters response: ", response.getBody().asString());
-
-        // Validate standard response
         validateStandardWeatherResponse(response, CITY_WITH_SPECIAL_CHARACTERS);
-
-        logger.info("City with special characters response passed for: {}", CITY_WITH_SPECIAL_CHARACTERS);
+        logger.info("City with special characters response passed for city: {}", CITY_WITH_SPECIAL_CHARACTERS);
         logTestCompletion("testGetWeatherWithSpecialCharactersInCityName", true);
     }
 
@@ -62,20 +39,12 @@ public class WeatherFunctionalTests extends BaseTest {
     @Story("Error handling for invalid city")
     @Severity(SeverityLevel.NORMAL)
     public void testGetWeatherForInvalidCity() {
-        // Execute API call
         Response response = weatherApiClient.getCurrentWeather(INVALID_CITY, null);
         Allure.addAttachment("Error Response", response.getBody().asString());
-
-        // Validate error response
-        response.then()
-                .statusCode(404)
-                .body("message", containsString("not found"));
-
-        logger.info("Invalid city test completed - API correctly returned 404 for: {}", INVALID_CITY);
+        validateErrorResponse(response, CITY_NOT_FOUND_STATUS, CITY_NOT_FOUND_MESSAGE_CONTAINS);
+        logger.info("Invalid city test completed - API correctly returned HTTP STATUS {} for: {}", CITY_NOT_FOUND_STATUS, INVALID_CITY);
         logTestCompletion("testGetWeatherForInvalidCity", true);
     }
-
-
 
     @Test(description = "Verify weather data by coordinates")
     @Story("Coordinate-based weather retrieval")
@@ -122,6 +91,8 @@ public class WeatherFunctionalTests extends BaseTest {
                 .body("main.humidity", notNullValue())
                 .body("weather", not(empty()))
                 .body("weather[0].main", notNullValue())
-                .body("weather[0].description", notNullValue());
+                .body("weather[0].description", notNullValue())
+                .statusCode(200)
+                .header("Content-Type", org.hamcrest.Matchers.containsString("application/json"));
     }
 }
