@@ -106,4 +106,28 @@ public class WeatherFunctionalTests extends BaseTest {
 
         logTestCompletion("testGetWeatherByCoordinates", true);
     }
+
+
+    @Test(description = "Verify API handles special characters in city name")
+    @Story("Special Characters")
+    @Severity(SeverityLevel.NORMAL)
+    public void testGetWeatherWithSpecialCharactersInCityName() {
+        // Execute API call
+        Response response = weatherApiClient.getCurrentWeather(cityWithSpecialCharacters, null);
+        Allure.addAttachment("City with special characters response: ", response.getBody().asString());
+
+        // Validate error response
+        response.then()
+                .body("name", equalTo(cityWithSpecialCharacters))
+                .body("cod", equalTo(200))
+                .body("main", notNullValue())
+                .body("main.temp", notNullValue())
+                .body("main.humidity", notNullValue())
+                .body("weather", not(empty()))
+                .body("weather[0].main", notNullValue())
+                .body("weather[0].description", notNullValue());
+
+        logger.info("City with special chaacters response passed for: {}", cityWithSpecialCharacters);
+        logTestCompletion("testGetWeatherWithSpecialCharactersInCityName", true);
+    }
 }

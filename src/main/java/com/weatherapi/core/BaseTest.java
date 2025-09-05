@@ -14,6 +14,7 @@ public class BaseTest {
     protected static final String city = TestConfig.getDefaultCity();
     protected static final String countryCode = TestConfig.getDefaultCountry();
     protected static final String invalidCity = TestConfig.getInvalidCity();
+    protected static final String cityWithSpecialCharacters = "São Paulo";
 
     @BeforeClass
     public void setupClass() {
