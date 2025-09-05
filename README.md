@@ -14,9 +14,11 @@ Get your free API Key at https://openweathermap.org/
 
 Run with the following:  
 
+``` shell
+   mvn clean test-compile  
 ```
-mvn clean test-compile  
-```
-```
-mvn clean test; mvn allure:serv
+
+``` shell
+   mvn clean test; 
+   mvn allure:serv;
 ```
