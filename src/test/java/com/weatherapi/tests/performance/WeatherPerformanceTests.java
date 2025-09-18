@@ -22,10 +22,8 @@ public class WeatherPerformanceTests extends BaseTest {
         Allure.addAttachment("Response Time", responseTime + "ms");
         Allure.addAttachment("API Response", response.getBody().asString());
 
-        // Validate response
         validateSuccessfulResponse(response);
 
-        // Performance assertion - should respond within 3 seconds
         Assert.assertTrue(responseTime < 3000,
                 String.format("API response time (%dms) should be less than 3000ms", responseTime));
 

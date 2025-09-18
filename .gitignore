@@ -29,3 +29,4 @@ Thumbs.db
 src/test/resources/config/test.properties
 target/test-classes/config/test.properties
 /target
+/target

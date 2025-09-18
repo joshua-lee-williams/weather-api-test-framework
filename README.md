@@ -20,5 +20,5 @@ Run with the following:
 
 ``` shell
    mvn clean test; 
-   mvn allure:serv;
+   mvn allure:serve;
 ```

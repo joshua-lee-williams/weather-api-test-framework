@@ -17,6 +17,8 @@ public class WeatherSecurityTests extends BaseTest {
         validateErrorResponse(response, INVALID_API_KEY_STATUS, INVALID_API_KEY_MESSAGE_CONTAINS);
         logger.info("Empty API Key test completed - API correctly returned HTTP Status {} for apiKey: {}", INVALID_API_KEY_STATUS, EMPTY_API_KEY);
         logTestCompletion("testGetWeatherWithEmptyApiKey", true);
+        Allure.addAttachment("Empty API Key tested: ", EMPTY_API_KEY);
+        Allure.addAttachment("API Response: ", response.getBody().asString());
     }
 
 }
